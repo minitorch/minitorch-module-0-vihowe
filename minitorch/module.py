@@ -31,13 +31,15 @@ class Module:
 
     def train(self) -> None:
         "Set the mode of this module and all descendent modules to `train`."
-        # TODO: Implement for Task 0.4.
-        raise NotImplementedError("Need to implement for Task 0.4")
+        self.training = True
+        for module in self.modules():
+            module.train()
 
     def eval(self) -> None:
         "Set the mode of this module and all descendent modules to `eval`."
-        # TODO: Implement for Task 0.4.
-        raise NotImplementedError("Need to implement for Task 0.4")
+        self.training = False
+        for module in self.modules():
+            module.eval()
 
     def named_parameters(self) -> Sequence[Tuple[str, Parameter]]:
         """
@@ -47,13 +49,31 @@ class Module:
         Returns:
             The name and `Parameter` of each ancestor parameter.
         """
-        # TODO: Implement for Task 0.4.
-        raise NotImplementedError("Need to implement for Task 0.4")
+        ret = []
+        name_arr = ['']
+        module_arr = [self]
+        while module_arr:
+            name = name_arr.pop(0)
+            module = module_arr.pop(0)
+            for k, v in module._parameters.items():
+                ret_name = name + '.' + k
+                if ret_name.startswith('.'):
+                    ret_name = ret_name[1:]
+                ret.append((ret_name, v))
+            
+            for sub_module_name, sub_module in module._modules.items():
+                name_arr.append(name + '.' + sub_module_name)
+                module_arr.append(sub_module)
+        return ret
 
     def parameters(self) -> Sequence[Parameter]:
         "Enumerate over all the parameters of this module and its descendents."
-        # TODO: Implement for Task 0.4.
-        raise NotImplementedError("Need to implement for Task 0.4")
+        ret = []
+        for _, v in self._parameters.items():
+            ret.append(v)
+        for _, module in self._modules.items():
+            ret.extend(module.parameters())
+        return ret
 
     def add_parameter(self, k: str, v: Any) -> Parameter:
         """
