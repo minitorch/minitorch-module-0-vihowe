@@ -60,7 +60,6 @@ class Module:
                 if ret_name.startswith('.'):
                     ret_name = ret_name[1:]
                 ret.append((ret_name, v))
-            
             for sub_module_name, sub_module in module._modules.items():
                 name_arr.append(name + '.' + sub_module_name)
                 module_arr.append(sub_module)
